@@ -5,7 +5,7 @@ var verbose = false;
 // Create new DevTools panel.
 chrome.devtools.panels.create(
   "My Panel",
-  "icon.png",
+  "about/icon.png",
   "panel.html",
   initialize
 );
