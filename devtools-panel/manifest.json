@@ -1,0 +1,19 @@
+{
+  "name": "DevTools Panel",
+  "short_name": "DevPanel",
+  "version": "0.0.1",
+  "devtools_page": "devtools.html",
+  "description": "This extension shows how to create new panel in DevTools Toolbox",
+  "content_scripts": [{
+    "matches": ["<all_urls>"],
+    "js": [ "content-script.js" ],
+    "run_at": "document_start",
+    "all_frames": true
+  } ],
+  "browser_action": {
+    "default_icon": {
+    },
+    "default_title": "DevTools"
+  },
+  "manifest_version": 2
+}
