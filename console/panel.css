@@ -1,0 +1,58 @@
+/* See license.txt for terms of usage */
+
+body {
+  padding: 0;
+  margin: 0;
+  background-color: white;
+  overflow: hidden;
+}
+
+.output {
+  width: 100vw;
+  height: calc(100vh - 24px);
+  font-family: monospace;
+}
+
+.commandLine {
+  height: 21px;
+  line-height: 21px;
+  width: 100vw;
+  border: 0;
+  border-top: 1px solid lightgray;
+  background-image: url(commandline-icon.svg#light-theme);
+  background-repeat: no-repeat;
+  background-size: 16px 16px;
+  background-position: 4px 50%;
+  padding-inline-start: 20px;
+  padding-bottom: 2px;
+}
+
+.commandLine:focus{
+  background-image: url(commandline-icon.svg#light-theme-focus);
+}
+
+.log,
+.result {
+  height: 20px;
+  width: 100%;
+  line-height: 20px;
+  padding-inline-start: 20px;
+  background-repeat: no-repeat;
+  background-size: 72px 60px;
+}
+
+.log {
+  background-image: url(log-icon.svg#light-icons);
+  background-position: -43px -31px;
+  color: gray;
+}
+
+.result {
+  background-image: url(result-icon.svg#light-icons);
+  background-position: -55px -31px;
+  color: green;
+}
+
+.error {
+  color: red;
+}

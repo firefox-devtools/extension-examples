@@ -1,0 +1,8 @@
+{
+  "name": "Console",
+  "short_name": "Console",
+  "description": "This extension shows how to evaluate script in the content scope",
+  "version": "0.0.1",
+  "devtools_page": "devtools.html",
+  "manifest_version": 2
+}
