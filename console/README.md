@@ -1,8 +1,9 @@
 # Console
-This extension shows how to evaluate script in content scope.
+This extension demonstrates how to evaluate script in the inspected window
+(content scope).
 
 # Installation
-Simple instructions describing how to install this extension.
+See how to install this extension.
 
 1. Open `about:debugging` in your Firefox
 2. Click "Load Temporary Add-on"
