@@ -36,20 +36,20 @@ body {
   height: 20px;
   width: 100%;
   line-height: 20px;
-  padding-inline-start: 20px;
+  padding-inline-start: 21px;
   background-repeat: no-repeat;
   background-size: 72px 60px;
 }
 
 .log {
   background-image: url(log-icon.svg#light-icons);
-  background-position: -43px -31px;
+  background-position: -43px -32px;
   color: gray;
 }
 
 .result {
   background-image: url(result-icon.svg#light-icons);
-  background-position: -55px -31px;
+  background-position: -55px -32px;
   color: green;
 }
 
