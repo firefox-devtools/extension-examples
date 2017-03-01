@@ -11,6 +11,7 @@ body {
   width: 100vw;
   height: calc(100vh - 24px);
   font-family: monospace;
+  padding-top: 2px;
 }
 
 .commandLine {
