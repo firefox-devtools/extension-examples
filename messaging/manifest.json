@@ -1,0 +1,15 @@
+{
+  "name": "Messaging",
+  "short_name": "Messaging",
+  "description": "This extension shows how to communicate among different scopes",
+  "version": "0.0.1",
+  "devtools_page": "devtools.html",
+  "manifest_version": 2,
+  "content_scripts": [{
+    "matches": ["<all_urls>"],
+    "js": ["content-script.js"]
+  }],
+  "background": {
+    "scripts": ["background-script.js"]
+  }
+}
