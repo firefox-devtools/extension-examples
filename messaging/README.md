@@ -1,6 +1,8 @@
 # Messaging
 This extension shows how to communicate among different scopes
 
+UNDER CONSTRUCTION
+
 # Installation
 See how to install this extension.
 
