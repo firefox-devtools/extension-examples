@@ -22,7 +22,7 @@ var pageY = document.querySelector("#pageY");
 port.onMessage.addListener(function(message) {
   console.log("panel: onMessage", message);
 
-  switch (msg.action) {
+  switch (message.action) {
     case 'mousemove':
       pageX.innerHTML = message.pageX;
       pageY.innerHTML = message.pageY;
