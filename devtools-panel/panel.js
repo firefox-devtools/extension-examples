@@ -1,9 +1,3 @@
-/* See license.txt for terms of usage */
-
-"use strict";
-
-window.addEventListener('click', e => {
-  alert("Hello MyPanel!");
+document.getElementById('click-me').addEventListener('click', e => {
+  alert("You clicked the button on the custom panel");
 });
-
-document.querySelector("#content").innerHTML = "Click Me";
