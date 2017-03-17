@@ -1,17 +1,14 @@
-/* See license.txt for terms of usage */
-
-var verbose = false;
-
-// Create new DevTools panel.
+// Create a panel when DevTools are opened
+// https://developer.chrome.com/extensions/devtools_panels#method-create
 chrome.devtools.panels.create(
   "My Panel",
-  "about/icon.png",
+  "icon.png",
   "panel.html",
-  initialize
+  onCreated
 );
 
-function initialize(panel) {
-  panel.onShown.addListener(function (win) {
-    // TODO
-  });
+function onCreated(panel) {
+  // To see these log messages, open the Browser Console:
+  // Tools -> Web Developer -> Browser Console
+  console.log('Panel created:', panel);
 }
