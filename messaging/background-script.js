@@ -4,72 +4,72 @@
 
 "use strict";
 
-var connections = {};
-
 console.log("background-script: LOAD");
 
+// List of Panel connections.
+var connections = {};
+
 /**
- * Handle 'connection' event and register other listeners.
+ * Collect all connections created by the panel script.
  */
-chrome.runtime.onConnect.addListener(function(port) {
-  var name = port.name;
+chrome.runtime.onConnect.addListener(function (port) {
+  //console.log("background-script onConnect", port);
 
-  console.log('background-script: new connection: ' + name, port);
+  // Only collect connections coming from the panel script.
+  if (port.name != "panel") {
+    return;
+  }
 
-  /**
-   * Handle incoming messages.
-   */
-  function onMessage(message, sender, reply) {
-    console.log('background-script: message received', message);
+  // Define listener as a function so, we can remove it later.
+  var extensionListener = function (message, sender, sendResponse) {
+    //console.log("background-script port.onMessage", message, sender);
 
-    var tabId;
+    // The original connection event doesn't include the tab ID of the
+    // DevTools page, so we need to send it explicitly.
+    if (message.action == "init") {
+      connections[message.tabId] = port;
+      return;
+    }
 
-    if (message.tabId) {
-      tabId = message.tabId
+    // TODO: handle other messages
+  }
+
+  // Listen to messages sent from the panel script.
+  port.onMessage.addListener(extensionListener);
+
+  // Remove panel connection on disconnect.
+  port.onDisconnect.addListener(function(port) {
+    //console.log("background-script onDisconnect", port);
+
+    port.onMessage.removeListener(extensionListener);
+
+    var tabs = Object.keys(connections);
+    for (var i=0, len=tabs.length; i < len; i++) {
+      if (connections[tabs[i]] == port) {
+        delete connections[tabs[i]]
+        break;
+      }
+    }
+  });
+});
+
+/**
+ * Receive message from content script and relay to the panel script.
+ */
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+  console.log("background-script runtime.onMessage", request, sender);
+
+  // Messages from content scripts should have sender.tab set
+  if (sender.tab) {
+    var tabId = sender.tab.id;
+    if (tabId in connections) {
+      connections[tabId].postMessage(request);
     } else {
-      tabId = sender.sender.tab.id;
+      console.log("Tab not found in connection list.", connections);
     }
-
-    if (!connections[tabId]) {
-      connections[tabId] = {};
-    }
-
-    connections[tabId][name] = port;
-
-    // Forward messages to specified 'target' (might be: 'panel',
-    // 'content-script', 'devtools-script').
-    if (message.target) {
-      if (connections[tabId][message.target]) {
-        connections[tabId][message.target].postMessage(message);
-      } else {
-        console.log('background-script: wrong target ' + message.target);
-      }
-    }
+  } else {
+    console.log("sender.tab not defined.", sender);
   }
-
-  /**
-   * Handle disconnect event.
-   */
-  function onDisconnect() {
-    console.log('background-script: disconnect');
-
-    port.onMessage.removeListener(onMessage);
-
-    Object.keys(connections).forEach(tabId => {
-      if (connections[tabId][name] === port) {
-        connections[tabId][name] = null;
-        delete connections[tabId][name];
-      }
-      if (Object.keys(connections[tabId]).length === 0) {
-        connections[tabId] = null;
-        delete connections[tabId];
-      }
-    })
-  }
-
-  // Register listeners
-  port.onMessage.addListener(onMessage);
-  port.onDisconnect.addListener(onDisconnect);
 
   return true;
 });

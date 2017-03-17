@@ -15,3 +15,7 @@ See how to install this extension.
 The add-on will be installed, and will stay installed until you restart Firefox.
 
 See MDN for [more details](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Temporary_Installation_in_Firefox)
+
+# Other Resources
+* https://developer.chrome.com/extensions/devtools
+* http://stackoverflow.com/questions/14265880/content-script-to-devtools-js-to-my-new-panel

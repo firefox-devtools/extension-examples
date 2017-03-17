@@ -19,8 +19,8 @@ var pageY = document.querySelector("#pageY");
 /**
  * Handle messages coming from the background script.
  */
-port.onMessage.addListener(function(message) {
-  console.log("panel: onMessage", message);
+port.onMessage.addListener(function(message, sender) {
+  //console.log("panel: onMessage", message, sender);
 
   switch (message.action) {
     case 'mousemove':
@@ -35,7 +35,6 @@ port.onMessage.addListener(function(message) {
  */
 function post(message) {
   message.tabId = tabId;
-  message.target = "content-script";
   port.postMessage(message);
 }
 
@@ -49,3 +48,9 @@ myButton.addEventListener("click", event => {
     content: myInput.value
   });
 }, false);
+
+// Sent initialization message.
+post({
+  action: 'init',
+  tabId: tabId
+});

@@ -18,27 +18,14 @@ chrome.devtools.panels.create(
  * Panel initialization
  */
 function initialize(panel) {
+  console.log("DevTools panel initialized");
+
   panel.onShown.addListener(function (win) {
-    // TODO: initialization steps
+    // My panel has been shown
+  });
+
+  panel.onHidden.addListener(function (win) {
+    // My panel has been hidden
   });
 }
 
-/**
- * Setup connection to a background page.
- */
-var tabId = chrome.devtools.inspectedWindow.tabId;
-var port = chrome.runtime.connect(null, { name: "devtools-script" });
-
-function post(message) {
-  message.tabId = tabId;
-  message.target = "panel";
-  port.postMessage(message);
-}
-
-port.onDisconnect.addListener(() => {
-  console.log("devtools-script: disconnect");
-});
-
-port.onMessage.addListener(message => {
-  console.log("devtools-script: message received", message);
-});
