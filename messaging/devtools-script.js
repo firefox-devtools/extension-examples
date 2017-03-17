@@ -5,7 +5,7 @@
 console.log("devtools-script: LOAD");
 
 /**
- * Create new DevTools panel.
+ * Create new DevTools panel "My Panel".
  */
 chrome.devtools.panels.create(
   "My Panel",
@@ -15,7 +15,10 @@ chrome.devtools.panels.create(
 );
 
 /**
- * Panel initialization
+ * Panel initialization. The callback is executed when
+ * the panel is initialized. But, the panel script is
+ * executed when the panel is selected for the first
+ * time (by the user).
  */
 function initialize(panel) {
   console.log("DevTools panel initialized");

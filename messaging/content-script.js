@@ -6,17 +6,6 @@
 
 console.log("content-script: LOAD");
 
-/**
- * Handle 'mousemove' DOM events.
- */
-window.addEventListener("mousemove", event => {
-  chrome.runtime.sendMessage({
-    action: "mousemove",
-    pageX: event.pageX,
-    pageY: event.pageY,
-  });
-});
-
 // Setup port for communication with the background script
 // and send initialization message.
 var port = chrome.runtime.connect(null, { name: "content" });
@@ -34,4 +23,17 @@ port.onMessage.addListener(function(message, sender) {
       window.document.body.innerHTML = "";
       break;
   }
+});
+
+/**
+ * Handle 'mousemove' DOM events. We are sending these
+ * events using 'chrome.runtime.sendMessage' (as an example)
+ * but the port could be also used here.
+ */
+window.addEventListener("mousemove", event => {
+  chrome.runtime.sendMessage({
+    action: "mousemove",
+    pageX: event.pageX,
+    pageY: event.pageY,
+  });
 });
