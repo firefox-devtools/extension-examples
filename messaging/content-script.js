@@ -16,3 +16,22 @@ window.addEventListener("mousemove", event => {
     pageY: event.pageY,
   });
 });
+
+// Setup port for communication with the background script
+// and send initialization message.
+var port = chrome.runtime.connect(null, { name: "content" });
+port.postMessage({ action: "init" });
+
+/**
+ * Handle messages coming from the panel
+ * (relayed through background script).
+ */
+port.onMessage.addListener(function(message, sender) {
+  console.log("content-script: onMessage");
+
+  switch (message.action) {
+    case "clearPage":
+      window.document.body.innerHTML = "";
+      break;
+  }
+});

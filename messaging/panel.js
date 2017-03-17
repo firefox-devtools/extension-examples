@@ -7,23 +7,24 @@
 console.log("panel: LOAD");
 
 // Setup port for communication with the background script
-var port = chrome.runtime.connect(null, { name : 'panel' });
+var port = chrome.runtime.connect(null, { name: "panel" });
 var tabId = chrome.devtools.inspectedWindow.tabId;
 
 // Get reference to UI elements defined in  panel.html
-var myButton = document.querySelector("#sendMessageButton");
-var myInput = document.querySelector("#message");
+var clearPage = document.querySelector("#clearPage");
 var pageX = document.querySelector("#pageX");
 var pageY = document.querySelector("#pageY");
 
 /**
- * Handle messages coming from the background script.
+ * Handle messages coming from the content script.
+ * These messages are relayed by the background
+ * script.
  */
 port.onMessage.addListener(function(message, sender) {
-  //console.log("panel: onMessage", message, sender);
+  console.log("panel: onMessage", message, sender);
 
   switch (message.action) {
-    case 'mousemove':
+    case "mousemove":
       pageX.innerHTML = message.pageX;
       pageY.innerHTML = message.pageY;
       break;
@@ -39,18 +40,19 @@ function post(message) {
 }
 
 /**
- * Handle click on 'sendMessage' button. The implementation
- * sends a message to the the background script.
+ * Handle click on 'clearPage' button and send a message
+ * to the content script (it's relayed through background
+ * script).
  */
-myButton.addEventListener("click", event => {
+clearPage.addEventListener("click", event => {
   post({
-    action: "message",
-    content: myInput.value
+    action: "clearPage",
+    target: "content"
   });
 }, false);
 
 // Sent initialization message.
 post({
-  action: 'init',
+  action: "init",
   tabId: tabId
 });
