@@ -26,10 +26,10 @@ chrome.runtime.onConnect.addListener(function (port) {
   }
 
   // Define listener as a function so, we can remove it later.
-  var extensionListener = function (message, sender, sendResponse) {
-    console.log("background-script port.onMessage", message, sender);
+  var extensionListener = function (message) {
+    console.log("background-script port.onMessage", message, port);
 
-    var tabId = sender.sender.tab ? sender.sender.tab.id : message.tabId;
+    var tabId = port.sender.tab ? port.sender.tab.id : message.tabId;
 
     // The original connection event doesn't include the tab ID of the
     // DevTools page, so we need to send it explicitly (attached
@@ -50,7 +50,7 @@ chrome.runtime.onConnect.addListener(function (port) {
         conn.postMessage(message);
       }
     }
-  }
+  };
 
   // Listen to messages sent from the panel script.
   port.onMessage.addListener(extensionListener);
@@ -64,8 +64,18 @@ chrome.runtime.onConnect.addListener(function (port) {
 
     var tabs = Object.keys(connections);
     for (var i=0, len=tabs.length; i < len; i++) {
-      if (connections[tabs[i]] == port) {
-        delete connections[tabs[i]]
+      if (connections[tabs[i]][port.name] === port) {
+        console.log("background-script onDisconnect connections cleanup",
+                    {tabId: tabs[i], portName: port.name});
+        delete connections[tabs[i]][port.name];
+
+        // If there is not port associated to the tab, remove it
+        // from the connections map.
+        if (Object.keys(connections[tabs[i]]).length === 0) {
+          console.log("background-script onDisconnect remove connection object",
+                      {tabId: tabs[i]});
+          delete connections[tabs[i]];
+        }
         break;
       }
     }
@@ -73,26 +83,17 @@ chrome.runtime.onConnect.addListener(function (port) {
 });
 
 /**
- * Receive message from content script and relay to the panel script.
+ * Receive one-time message from panel and relay to the content script.
  * This is for messages sent through 'chrome.runtime.sendMessage'.
- * We could use port for that but this is here as an example.
+ * We could use port for that but this is here as an example of one-time messages.
  */
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   console.log("background-script runtime.onMessage", request, sender);
 
   // Messages from content scripts should have sender.tab set.
   // The are all relayed to the "panel" connection.
-  if (sender.tab) {
-    var tabId = sender.tab.id;
-    if (tabId in connections) {
-      connections[tabId]["panel"].postMessage(request);
-    } else {
-      // This happens if the panel isn't created yet (i.e. the Toolbox
-      // not opened and the panel not selected at least once).
-      //console.log("Tab not found in connection list.", connections);
-    }
-  } else {
-    console.log("sender.tab not defined.", sender);
+  if (request.target == "content" && request.tabId) {
+    chrome.tabs.sendMessage(request.tabId, request);
   }
 
   return true;

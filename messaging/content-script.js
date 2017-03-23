@@ -2,34 +2,47 @@
 
 console.log("content-script: LOAD");
 
-// Setup port for communication with the background script
+var port;
+
+// Lazily setup port for communication with the background script
 // and send initialization message.
-var port = chrome.runtime.connect(null, { name: "content" });
-port.postMessage({ action: "init" });
+function setupPortIfNeeded() {
+  if (!port) {
+    port = chrome.runtime.connect(null, { name: "content" });
+    port.postMessage({ action: "init" });
+    port.onDisconnect.addListener(function () {
+      port = null;
+    });
+  }
+}
 
 /**
- * Handle messages coming from the panel
+ * Handle requests coming from the panel
  * (relayed through background script).
  */
-port.onMessage.addListener(function(message, sender) {
-  console.log("content-script: onMessage");
+chrome.runtime.onMessage.addListener(function(message) {
+  console.log("content-script: onMessage", message);
 
   switch (message.action) {
-    case "clearPage":
-      window.document.body.innerHTML = "";
-      break;
+  case "clearPage":
+    window.document.body.innerHTML = "";
+    break;
   }
 });
+
+function sendMouseEvent(event) {
+  setupPortIfNeeded();
+  port.postMessage({
+    action: "mousemove",
+    pageX: event.pageX,
+    pageY: event.pageY,
+    target: "panel",
+  });
+}
 
 /**
  * Handle 'mousemove' DOM events. We are sending these
  * events using 'chrome.runtime.sendMessage' (as an example)
  * but the port could be also used here.
  */
-window.addEventListener("mousemove", event => {
-  chrome.runtime.sendMessage({
-    action: "mousemove",
-    pageX: event.pageX,
-    pageY: event.pageY,
-  });
-});
+window.addEventListener("mousemove", event => sendMouseEvent(event));

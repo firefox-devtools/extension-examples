@@ -41,14 +41,8 @@ function post(message) {
  * script).
  */
 clearPage.addEventListener("click", event => {
-  post({
-    action: "clearPage",
-    target: "content"
-  });
+  chrome.runtime.sendMessage({action: "clearPage", target: "content", tabId});
 }, false);
 
 // Sent initialization message.
-post({
-  action: "init",
-  tabId: tabId
-});
+post({action: "init"});
