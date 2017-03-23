@@ -4,8 +4,10 @@ console.log("content-script: LOAD");
 
 var port;
 
-// Lazily setup port for communication with the background script
-// and send initialization message.
+/**
+ * Lazily setup port for communication with the background script
+ * and send initialization message.
+ */
 function setupPortIfNeeded() {
   if (!port) {
     port = chrome.runtime.connect(null, { name: "content" });
@@ -30,6 +32,9 @@ chrome.runtime.onMessage.addListener(function(message) {
   }
 });
 
+/**
+ * Send mouse coordinates to DevTools panel script.
+ */
 function sendMouseEvent(event) {
   setupPortIfNeeded();
   port.postMessage({
@@ -42,7 +47,6 @@ function sendMouseEvent(event) {
 
 /**
  * Handle 'mousemove' DOM events. We are sending these
- * events using 'chrome.runtime.sendMessage' (as an example)
- * but the port could be also used here.
+ * events using a port to DevTools panel.
  */
 window.addEventListener("mousemove", event => sendMouseEvent(event));
