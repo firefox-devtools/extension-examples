@@ -1,0 +1,34 @@
+{
+  "manifest_version": 2,
+  "name": "react-redux-webextension-example",
+  "version": "0.9",
+  "description": "Example WebExtension with React and Redux",
+  "icons": {
+    "32": "icons/icon.png",
+    "64": "icons/icon@2x.png"
+  },
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "devtools_page": "devtools.html",
+  "browser_action": {
+    "browser_style": false,
+    "default_popup": "popup.html",
+    "default_title": "Example WebExtension with React and Redux",
+    "default_icon": "icons/toolbar.png"
+  },
+  "applications": {
+    "gecko": {
+      "strict_min_version": "55.0a1"
+    }
+  },
+  "commands": {
+    "SetAsDefault": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+1",
+        "mac": "MacCtrl+Shift+1"
+      },
+      "description": "Run example command to reset the theme."
+    }
+  }
+}

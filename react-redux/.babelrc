@@ -1,0 +1,25 @@
+{
+  "plugins": [
+    "transform-react-jsx",
+    "transform-object-rest-spread",
+    "transform-runtime"
+  ],
+  "presets": [
+    [
+      "env",
+      {
+        "targets": {
+          "browsers": [
+            "Firefox > 54"
+          ]
+        },
+        "modules": false
+      }
+    ]
+  ],
+  "env": {
+    "test": {
+      "plugins": ["transform-es2015-modules-commonjs"]
+    }
+  }
+}
